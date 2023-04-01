@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 10,
+  "id": 11,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -96,7 +96,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(rate( traces_spanmetrics_calls_total{}[$__range])) by (service_name,http_method,http_status_code,span_kind,span_name,status_code)",
+          "expr": "sum(rate( traces_spanmetrics_calls_total{}[$__range])) by (service_name,http_method,http_status_code,span_kind,span_name,status_code) >0",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -125,7 +125,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(rate( traces_spanmetrics_calls_total{}[$__range])) by (service_name,span_kind)",
+          "expr": "sum(rate( traces_spanmetrics_calls_total{}[$__range])) by (service_name,span_kind)>0",
           "hide": false,
           "instant": true,
           "legendFormat": "__auto",
@@ -726,7 +726,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "ServiceTopology",
-  "uid": "i7CKXcB4k",
+  "uid": "7JTgAkYVk",
   "version": 3,
   "weekStart": ""
 }
