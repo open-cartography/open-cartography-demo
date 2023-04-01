@@ -134,7 +134,7 @@
         }
       ],
       "title": "Metrics To Trace Routes",
-      "type": "devrimdemiroz-servicemap-panel"
+      "type": "servicemap-panel"
     },
     {
       "collapsed": true,
