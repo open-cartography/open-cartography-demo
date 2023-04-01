@@ -633,7 +633,8 @@ services:
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
-      - ./src/grafana/plugins:/var/lib/grafana/plugins
+#      - ./src/grafana/plugins:/var/lib/grafana/plugins
+      - ../../topology-panel:/var/lib/grafana/plugins
     ports:
       - "${GRAFANA_SERVICE_PORT}"
     logging: *logging
