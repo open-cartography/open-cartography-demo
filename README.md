@@ -1,6 +1,6 @@
 # open-cartography-demo
 
-![](../.github/footsteps/2023-04-01 SegmentedWorm.png)
+![](https://github.com/open-cartography/.github/blob/main/footsteps/2023-04-01%20SegmentedWorm.png)
 2023-04-01 Screenshot
 
 ## quick start
@@ -28,20 +28,29 @@ available in the opentelemetry contrib library into visuals.
 Decluttering the visualizations from scratch on service level, and possibly and hopefully then on the level of the individual spans.
 
 
-* Webstore: http://localhost:8080/
-* Grafana: http://localhost:8080/grafana/
-* Feature Flags UI: http://localhost:8080/feature/
-* Load Generator UI: http://localhost:8080/loadgen/
-* Jaeger UI: http://localhost:8080/jaeger/ui/
-* Prometheus: http://localhost:9090/
+* [Webstore](http://localhost:8080/)
+* [Grafana](http://localhost:8080/grafana/)
+* [Feature Flags UI](http://localhost:8080/feature/)
+* [Load Generator UI](http://localhost:8080/loadgen/)
+* [Jaeger UI](http://localhost:8080/jaeger/ui/)
+* [Prometheus](http://localhost:9090/)
 
 
 [//]: # (TODO: Attach commands to makefile)
 [//]: # (insert makefile content into document)
 
-[Makefile](https://github.com/open-cartography/open-cartography-demo/blob/main/Makefile)
+👀 [Makefile](https://github.com/open-cartography/open-cartography-demo/blob/main/Makefile)
+```shell
+make fast-run
+```
+```shell
+make grafana
+```
+```shell
+make otelcol
+```
 
-<%@include file="https://github.com/open-cartography/open-cartography-demo/blob/main/Makefile"%>
+
 
 
 
