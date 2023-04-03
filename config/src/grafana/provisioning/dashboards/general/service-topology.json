@@ -134,7 +134,7 @@
         }
       ],
       "title": "Metrics To Trace Routes",
-      "type": "servicemap-panel"
+      "type": "topology-panel"
     },
     {
       "collapsed": true,
