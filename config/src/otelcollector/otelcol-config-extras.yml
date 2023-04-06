@@ -1,0 +1,50 @@
+exporters:
+  logging:
+  prometheusremotewrite:
+    endpoint: http://prometheus:9090/api/v1/write
+    target_info:
+      enabled: true
+processors:
+  attributes:
+    actions:
+      - action: insert
+        key: service_name
+        from_attribute: container_name
+
+  transform/grafanacloudapm:
+    trace_statements:
+      - context: span
+        statements:
+          - replace_match(attributes["http.target"], "/api/products/*", "/api/products/{productId}")
+          - set(name, Concat([attributes["http.method"], attributes["http.target"]], " ")) where name == "HTTP GET" and attributes["http.target"] != nil
+          - set(name, Concat([attributes["http.method"], attributes["http.target"]], " ")) where name == "HTTP POST" and attributes["http.target"] != nil
+  batch:
+  filter:
+    error_mode: ignore
+  metricstransform:
+    transforms:
+      - include: traces.spanmetrics.duration
+        action: update
+        new_name: traces.spanmetrics.latency
+      - include: traces.spanmetrics.calls
+        action: update
+        new_name: traces.spanmetrics.calls.total
+
+connectors:
+  spanmetrics:
+    namespace: "traces.spanmetrics"
+    histogram:
+      unit: "s"
+      explicit:
+  servicegraph:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [filter, transform/grafanacloudapm, batch]
+      exporters: [spanmetrics, servicegraph]
+    metrics:
+      receivers: [spanmetrics, servicegraph]
+      processors: [metricstransform, batch]
+      exporters: [prometheusremotewrite]

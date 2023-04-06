@@ -24,7 +24,7 @@ rest: copy_config
 run: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up
 
-grafana:
+grafana: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  grafana
 
 otelcol:
