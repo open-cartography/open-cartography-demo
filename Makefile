@@ -18,6 +18,9 @@ copy_config:
 fast-run: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up  --force-recreate --no-build --remove-orphans
 
+rest: copy_config
+	docker compose -f opentelemetry-demo/docker-compose-full.yml up  --force-recreate --no-build --remove-orphans
+
 run: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up
 
@@ -26,3 +29,6 @@ grafana:
 
 otelcol:
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  otelcol
+
+obs: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  otelcol grafana jaeger prometheus frontendproxy

@@ -28,63 +28,63 @@ services:
   # ******************
   # Core Demo Services
   # ******************
-#  # Accounting service
-#  accountingservice:
-#    image: ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
-#    container_name: accounting-service
-#    build:
-#      context: ./
-#      dockerfile: ./src/accountingservice/Dockerfile
-#      cache_from:
-#        - ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 20M
-#    restart: unless-stopped
-#    environment:
-#      - KAFKA_SERVICE_ADDR
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-#      - OTEL_RESOURCE_ATTRIBUTES
-#      - OTEL_SERVICE_NAME=accountingservice
-#    depends_on:
-#      otelcol:
-#        condition: service_started
-#      kafka:
-#        condition: service_healthy
-#    logging: *logging
+  # Accounting service
+  accountingservice:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
+    container_name: accounting-service
+    build:
+      context: src
+      dockerfile: ./src/accountingservice/Dockerfile
+      cache_from:
+        - ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
+    deploy:
+      resources:
+        limits:
+          memory: 20M
+    restart: unless-stopped
+    environment:
+      - KAFKA_SERVICE_ADDR
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+      - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_SERVICE_NAME=accountingservice
+    depends_on:
+      otelcol:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+    logging: *logging
 
-#  # AdService
-#  adservice:
-#    image: ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
-#    container_name: ad-service
-#    build:
-#      context: ./
-#      dockerfile: ./src/adservice/Dockerfile
-#      cache_from:
-#        - ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 300M
-#    restart: unless-stopped
-#    ports:
-#      - "${AD_SERVICE_PORT}"
-#    environment:
-#      - AD_SERVICE_PORT
-#      - FEATURE_FLAG_GRPC_SERVICE_ADDR
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-  #      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
-#      - OTEL_RESOURCE_ATTRIBUTES
-#      - OTEL_SERVICE_NAME=adservice
-  #      - OTEL_LOGS_EXPORTER
-#    depends_on:
-#      - otelcol
-#    logging: *logging
+  # AdService
+  adservice:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
+    container_name: ad-service
+    build:
+      context: src
+      dockerfile: ./src/adservice/Dockerfile
+      cache_from:
+        - ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    restart: unless-stopped
+    ports:
+      - "${AD_SERVICE_PORT}"
+    environment:
+      - AD_SERVICE_PORT
+      - FEATURE_FLAG_GRPC_SERVICE_ADDR
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+        - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
+      - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_SERVICE_NAME=adservice
+        - OTEL_LOGS_EXPORTER
+    depends_on:
+      - otelcol
+    logging: *logging
 
   # Cart service
   cartservice:
@@ -164,30 +164,30 @@ services:
 #    logging: *logging
 
   # Currency service
-#  currencyservice:
-#    image: ${IMAGE_NAME}:${IMAGE_VERSION}-currencyservice
-#    container_name: currency-service
-#    build:
-#      context: ./src/currencyservice
-#      cache_from:
-#        - ${IMAGE_NAME}:${IMAGE_VERSION}-currencyservice
-#      args:
-#        - GRPC_VERSION=1.46.0
-#        - OPENTELEMETRY_VERSION=1.5.0
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 20M
-#    restart: unless-stopped
-#    ports:
-#      - "${CURRENCY_SERVICE_PORT}"
-#    environment:
-#      - CURRENCY_SERVICE_PORT
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-#      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES},service.name=currencyservice   # The C++ SDK does not support OTEL_SERVICE_NAME
-#    depends_on:
-#      - otelcol
-#    logging: *logging
+  currencyservice:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}-currencyservice
+    container_name: currency-service
+    build:
+      context: ./src/currencyservice
+      cache_from:
+        - ${IMAGE_NAME}:${IMAGE_VERSION}-currencyservice
+      args:
+        - GRPC_VERSION=1.46.0
+        - OPENTELEMETRY_VERSION=1.5.0
+    deploy:
+      resources:
+        limits:
+          memory: 20M
+    restart: unless-stopped
+    ports:
+      - "${CURRENCY_SERVICE_PORT}"
+    environment:
+      - CURRENCY_SERVICE_PORT
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES},service.name=currencyservice   # The C++ SDK does not support OTEL_SERVICE_NAME
+    depends_on:
+      - otelcol
+    logging: *logging
 
   # Email service
   emailservice:
@@ -551,34 +551,34 @@ services:
     logging: *logging
 
   # Kafka used by Checkout, Accounting, and Fraud Detection services
-#  kafka:
-#    image: ${IMAGE_NAME}:${IMAGE_VERSION}-kafka
-#    container_name: kafka
-#    build:
-#      context: ./
-#      dockerfile: ./src/kafka/Dockerfile
-#      cache_from:
-#        - ${IMAGE_NAME}:${IMAGE_VERSION}-kafka
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 750M
-#    restart: unless-stopped
-#    environment:
-#      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
-#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-#      - OTEL_RESOURCE_ATTRIBUTES
-#      - OTEL_SERVICE_NAME=kafka
-#      - KAFKA_HEAP_OPTS=-Xmx400m -Xms400m
-#    healthcheck:
-#      test: nc -z kafka 9092
-#      start_period: 10s
-#      interval: 5s
-#      timeout: 10s
-#      retries: 10
-#    logging: *logging
+  kafka:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}-kafka
+    container_name: kafka
+    build:
+      context: ./
+      dockerfile: ./src/kafka/Dockerfile
+      cache_from:
+        - ${IMAGE_NAME}:${IMAGE_VERSION}-kafka
+    deploy:
+      resources:
+        limits:
+          memory: 750M
+    restart: unless-stopped
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+      - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_SERVICE_NAME=kafka
+      - KAFKA_HEAP_OPTS=-Xmx400m -Xms400m
+    healthcheck:
+      test: nc -z kafka 9092
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    logging: *logging
 
   # Redis used by Cart service
   redis-cart:
@@ -641,7 +641,7 @@ services:
 
   # OpenTelemetry Collector
   otelcol:
-    image: otel/opentelemetry-collector-contrib:0.74.0
+    image: otel/opentelemetry-collector-contrib:0.75.0
     container_name: otel-col
     deploy:
       resources:
