@@ -4,6 +4,10 @@ exporters:
     endpoint: http://prometheus:9090/api/v1/write
     target_info:
       enabled: true
+  otlp/jaeger:
+    endpoint: "jaeger:4317"
+    tls:
+      insecure: true
 processors:
   attributes:
     actions:
@@ -36,15 +40,45 @@ connectors:
     histogram:
       unit: "s"
       explicit:
+    dimensions_cache_size: 1500
+
+    # Additional list of dimensions on top of:
+    # - service.name
+    # - span.name
+    # - span.kind
+    # - status.code
+    dimensions:
+      # If the span is missing http.method, the connector will insert
+      # the http.method dimension with value 'GET'.
+      - name: http.method
+        default: GET
+
+      # If a default is not provided, the http.status_code dimension will be omitted
+      # if the span does not contain http.status_code.
+      - name: http.status_code
+
+    # The period on which all metrics (whose dimension keys remain in cache) will be emitted.
+    # Default: 15s.
+    metrics_flush_interval: 30s
   servicegraph:
+    store:
+      ttl: 5s
+      max_items: 1000
+    virtual_node_peer_attributes:
+      - db.name
+      - rpc.service
 
 service:
   pipelines:
-    traces:
+    traces/connector:
       receivers: [otlp]
       processors: [filter, transform/grafanacloudapm, batch]
       exporters: [spanmetrics, servicegraph]
-    metrics:
+    metrics/connector:
       receivers: [spanmetrics, servicegraph]
       processors: [metricstransform, batch]
       exporters: [prometheusremotewrite]
+    traces/jaeger:
+      receivers: [ otlp ]
+      processors: [ transform/grafanacloudapm, batch ]
+      exporters: [ otlp/jaeger ]

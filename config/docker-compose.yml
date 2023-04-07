@@ -625,7 +625,7 @@ services:
 
   # Grafana
   grafana:
-    image: grafana/grafana:main
+    image: grafana/grafana:9.4.7
     container_name: grafana
     deploy:
       resources:

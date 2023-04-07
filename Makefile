@@ -27,8 +27,11 @@ run: copy_config
 grafana: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  grafana
 
-otelcol:
+otelcol: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  otelcol
+
+prometheus: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  prometheus
 
 obs: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  otelcol grafana jaeger prometheus frontendproxy

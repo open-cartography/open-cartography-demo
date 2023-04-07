@@ -32,11 +32,11 @@ processors:
 
 service:
   pipelines:
-    traces:
-      receivers: [otlp]
-#      processors: [spanmetrics, batch]
-      processors: [batch]
-      exporters: [logging, otlp]
+#    traces:
+#      receivers: [otlp]
+##      processors: [spanmetrics, batch]
+#      processors: [batch]
+#      exporters: [logging, otlp]
     metrics:
       receivers: [otlp]
       processors: [transform, batch]
