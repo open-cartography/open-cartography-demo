@@ -1,16 +1,6 @@
 # Copyright The OpenTelemetry Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+
 
 version: '3.9'
 x-default-logging: &logging
@@ -33,7 +23,7 @@ services:
     image: ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
     container_name: accounting-service
     build:
-      context: src
+      context: ./
       dockerfile: ./src/accountingservice/Dockerfile
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
@@ -44,8 +34,7 @@ services:
     restart: unless-stopped
     environment:
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=accountingservice
@@ -61,7 +50,7 @@ services:
     image: ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
     container_name: ad-service
     build:
-      context: src
+      context: ./
       dockerfile: ./src/adservice/Dockerfile
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
@@ -75,13 +64,11 @@ services:
     environment:
       - AD_SERVICE_PORT
       - FEATURE_FLAG_GRPC_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-        - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT
       - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_LOGS_EXPORTER=otlp
       - OTEL_SERVICE_NAME=adservice
-        - OTEL_LOGS_EXPORTER
     depends_on:
       - otelcol
     logging: *logging
@@ -139,8 +126,7 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - SHIPPING_SERVICE_ADDR
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=checkoutservice
@@ -183,7 +169,7 @@ services:
       - "${CURRENCY_SERVICE_PORT}"
     environment:
       - CURRENCY_SERVICE_PORT
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES},service.name=currencyservice   # The C++ SDK does not support OTEL_SERVICE_NAME
     depends_on:
       - otelcol
@@ -229,16 +215,15 @@ services:
           memory: 175M
     restart: unless-stopped
     ports:
-      - "${FEATURE_FLAG_SERVICE_PORT}:${FEATURE_FLAG_SERVICE_PORT}"                                  # Feature Flag Service UI
+      - "${FEATURE_FLAG_SERVICE_PORT}"                                  # Feature Flag Service UI
       - "${FEATURE_FLAG_GRPC_SERVICE_PORT}"                             # Feature Flag Service gRPC API
     environment:
       - FEATURE_FLAG_SERVICE_PORT
       - FEATURE_FLAG_GRPC_SERVICE_PORT
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=grpc
       - OTEL_SERVICE_NAME=featureflagservice
       - DATABASE_URL=ecto://ffs:ffs@ffs_postgres:5432/ffs
-      - FEATURE_FLAG_SERVICE_PATH_ROOT="/feature"
     healthcheck:
       test: ["CMD", "curl", "-H", "baggage: synthetic_request=true", "-f", "http://localhost:${FEATURE_FLAG_SERVICE_PORT}"]
     depends_on:
@@ -262,8 +247,7 @@ services:
     restart: unless-stopped
     environment:
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=frauddetectionservice
@@ -300,14 +284,11 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - RECOMMENDATION_SERVICE_ADDR
       - SHIPPING_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES}
       - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES}
       - ENV_PLATFORM
       - OTEL_SERVICE_NAME=frontend
-      - WEB_APP_SERVICE_NAME=web-app
       - PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - WEB_OTEL_SERVICE_NAME=frontend-web
     depends_on:
@@ -404,8 +385,7 @@ services:
       - "${PAYMENT_SERVICE_PORT}"
     environment:
       - PAYMENT_SERVICE_PORT
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=paymentservice
@@ -432,8 +412,7 @@ services:
     environment:
       - PRODUCT_CATALOG_SERVICE_PORT
       - FEATURE_FLAG_GRPC_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=productcatalogservice
@@ -458,7 +437,7 @@ services:
     ports:
       - "${QUOTE_SERVICE_PORT}"
     environment:
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:4318/v1/traces
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:4318
       - OTEL_PHP_AUTOLOAD_ENABLED=true
       - QUOTE_SERVICE_PORT
       - OTEL_RESOURCE_ATTRIBUTES
@@ -488,8 +467,6 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - FEATURE_FLAG_GRPC_SERVICE_ADDR
       - OTEL_PYTHON_LOG_CORRELATION=true
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_METRICS_EXPORTER=otlp
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
@@ -520,7 +497,7 @@ services:
     environment:
       - SHIPPING_SERVICE_PORT
       - QUOTE_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:4317/v1/traces
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=shippingservice
     depends_on:
@@ -563,16 +540,15 @@ services:
     deploy:
       resources:
         limits:
-          memory: 750M
+          memory: 500M
     restart: unless-stopped
     environment:
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=kafka
-      - KAFKA_HEAP_OPTS=-Xmx400m -Xms400m
+      - KAFKA_HEAP_OPTS=-Xmx200m -Xms200m
     healthcheck:
       test: nc -z kafka 9092
       start_period: 10s
@@ -650,7 +626,7 @@ services:
         limits:
           memory: 125M
     restart: unless-stopped
-    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ,"--feature-gates=service.connectors"]
+    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
     volumes:
       - ./src/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
       - ./src/otelcollector/otelcol-config-extras.yml:/etc/otelcol-config-extras.yml
@@ -665,7 +641,7 @@ services:
 
   # Prometheus
   prometheus:
-    image: quay.io/prometheus/prometheus:v2.34.0
+    image: quay.io/prometheus/prometheus:v2.43.0
     container_name: prometheus
     command:
       - --web.console.templates=/etc/prometheus/consoles
@@ -740,4 +716,3 @@ services:
       - recommendationservice
       - shippingservice
       - quoteservice
-
