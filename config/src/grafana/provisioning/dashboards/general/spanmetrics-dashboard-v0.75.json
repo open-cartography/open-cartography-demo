@@ -21,13 +21,11 @@
       }
     ]
   },
-  "description": "Spanmetrics way of demo application view.",
-  "author": {
-    "name": "devrimdemiroz"
-    },
+  "description": "Spanmetrics way of demo application view. Compatible with otelcol v0.75",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 14,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -104,7 +102,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -113,7 +111,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,histogram_quantile(0.50, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name)))",
+          "expr": "topk(7,histogram_quantile(0.50, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name)))",
           "format": "time_series",
           "hide": true,
           "instant": false,
@@ -129,7 +127,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,histogram_quantile(0.95, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__range])) by (le,service_name)))",
+          "expr": "topk(7,histogram_quantile(0.95, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (le,service_name)))",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -144,7 +142,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.99, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name))",
+          "expr": "histogram_quantile(0.99, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name))",
           "hide": true,
           "interval": "",
           "legendFormat": "quantile99",
@@ -158,7 +156,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.999, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name))",
+          "expr": "histogram_quantile(0.999, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name))",
           "hide": true,
           "interval": "",
           "legendFormat": "quantile999",
@@ -229,7 +227,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -238,7 +236,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,sum by (service_name) (rate( calls_total{service_name=~\"$service\", operation=~\"$operation\"}[$__range])))",
+          "expr": "topk(7,sum by (service_name) (rate( traces_spanmetrics_calls_total{service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])))",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -307,7 +305,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -316,7 +314,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,sum(rate( calls_total{status_code=\"STATUS_CODE_ERROR\",service_name=~\"$service\", operation=~\"$operation\"}[$__range])) by (service_name))",
+          "expr": "topk(7,sum(rate( traces_spanmetrics_calls_total{status_code=\"STATUS_CODE_ERROR\",service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (service_name))",
           "instant": true,
           "interval": "",
           "legendFormat": "{{service_name}}",
@@ -367,7 +365,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "decimals": 2,
@@ -395,8 +395,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "lcd-gauge"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "lcd",
+                  "type": "gauge"
+                }
               },
               {
                 "id": "color",
@@ -413,8 +416,11 @@
             },
             "properties": [
               {
-                "id": "custom.displayMode",
-                "value": "lcd-gauge"
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "lcd",
+                  "type": "gauge"
+                }
               },
               {
                 "id": "color",
@@ -471,6 +477,7 @@
       "interval": "5m",
       "options": {
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -480,7 +487,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.3.6",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -488,7 +495,7 @@
             "uid": "webstore-metrics"
           },
           "exemplar": false,
-          "expr": "topk(7, sum(rate(calls_total{service_name=~\"$service\", operation=~\"$operation\"}[$__range])) by (operation,service_name)) ",
+          "expr": "topk(7, sum(rate(traces_spanmetrics_calls_total{service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (span_name,service_name)) ",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -501,7 +508,7 @@
             "uid": "webstore-metrics"
           },
           "exemplar": false,
-          "expr": "topk(7, sum(rate(calls_total{status_code=\"STATUS_CODE_ERROR\",service_name=~\"$service\", operation=~\"$operation\"}[$__range])) by (operation,service_name))",
+          "expr": "topk(7, sum(rate(traces_spanmetrics_calls_total{status_code=\"STATUS_CODE_ERROR\",service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (span_name,service_name))",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -515,7 +522,7 @@
         {
           "id": "seriesToColumns",
           "options": {
-            "byField": "operation"
+            "byField": "span_name"
           }
         },
         {
@@ -575,13 +582,13 @@
               "Rate in Service": 5,
               "bRate": 2,
               "eRate": 3,
-              "operation": 0
+              "span_name": 0
             },
             "renameByName": {
               "Rate in Service": "Service",
               "bRate": "Rate",
               "eRate": "Error Rate",
-              "operation": "Operation Name"
+              "span_name": "Operation Name"
             }
           }
         },
@@ -641,7 +648,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue"
+                "color": "blue",
+                "value": null
               },
               {
                 "color": "green",
@@ -685,7 +693,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.1.0",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -694,7 +702,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,histogram_quantile(0.50, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name)))",
+          "expr": "topk(7,histogram_quantile(0.50, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name)))",
           "format": "time_series",
           "hide": true,
           "instant": false,
@@ -710,11 +718,11 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7,histogram_quantile(0.95, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__range])) by (le,operation)))",
+          "expr": "topk(7,histogram_quantile(0.95, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__range])) by (le,span_name)))",
           "hide": false,
           "instant": true,
           "interval": "",
-          "legendFormat": "{{operation}}",
+          "legendFormat": "{{span_name}}",
           "range": false,
           "refId": "B"
         },
@@ -725,7 +733,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.99, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name))",
+          "expr": "histogram_quantile(0.99, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name))",
           "hide": true,
           "interval": "",
           "legendFormat": "quantile99",
@@ -739,7 +747,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.999, sum(rate(latency_bucket{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])) by (le,service_name))",
+          "expr": "histogram_quantile(0.999, sum(rate(traces_spanmetrics_latency_bucket{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])) by (le,service_name))",
           "hide": true,
           "interval": "",
           "legendFormat": "quantile999",
@@ -766,7 +774,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -800,7 +809,7 @@
         },
         "showUnfilled": true
       },
-      "pluginVersion": "9.1.0",
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
@@ -809,10 +818,10 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(7, sum by (operation,service_name)(increase(latency_sum{service_name=~\"${service}\", operation=~\"$operation\"}[5m]) / increase(latency_count{service_name=~\"${service}\",operation=~\"$operation\"}[5m\n])))",
+          "expr": "topk(7, sum by (span_name,service_name)(increase(latency_sum{service_name=~\"${service}\", span_name=~\"$span_name\"}[5m]) / increase(latency_count{service_name=~\"${service}\",span_name=~\"$span_name\"}[5m\n])))",
           "instant": true,
           "interval": "",
-          "legendFormat": "{{operation}} [{{service_name}}]",
+          "legendFormat": "{{span_name}} [{{service_name}}]",
           "range": false,
           "refId": "A"
         }
@@ -866,7 +875,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -912,10 +922,10 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "topk(7,sum by (operation,service_name)(increase(latency_sum{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval]) / increase(latency_count{service_name=~\"$service\", operation=~\"$operation\"}[$__rate_interval])))",
+          "expr": "topk(7,sum by (span_name,service_name)(increase(latency_sum{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval]) / increase(latency_count{service_name=~\"$service\", span_name=~\"$span_name\"}[$__rate_interval])))",
           "instant": false,
           "interval": "",
-          "legendFormat": "[{{service_name}}]  {{operation}}",
+          "legendFormat": "[{{service_name}}]  {{span_name}}",
           "range": true,
           "refId": "A"
         }
@@ -925,7 +935,8 @@
     }
   ],
   "refresh": "5m",
-  "schemaVersion": 37,
+  "revision": 1,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -945,7 +956,7 @@
           "type": "prometheus",
           "uid": "webstore-metrics"
         },
-        "definition": "query_result(count by (service_name)(count_over_time({__name__=~\".*calls_total\"}[$__range])))",
+        "definition": "query_result(count by (service_name)(count_over_time({__name__=~\".*traces_spanmetrics_calls_total\"}[$__range])))",
         "hide": 0,
         "includeAll": true,
         "multi": true,
@@ -976,18 +987,18 @@
           "type": "prometheus",
           "uid": "webstore-metrics"
         },
-        "definition": "query_result(sum ({__name__=~\".*calls_total\",service_name=~\"$service\"})  by (operation))",
+        "definition": "query_result(sum ({__name__=~\".*traces_spanmetrics_calls_total\",service_name=~\"$service\"})  by (span_name))",
         "hide": 0,
         "includeAll": true,
         "multi": true,
-        "name": "operation",
+        "name": "span_name",
         "options": [],
         "query": {
-          "query": "query_result(sum ({__name__=~\".*calls_total\",service_name=~\"$service\"})  by (operation))",
+          "query": "query_result(sum ({__name__=~\".*traces_spanmetrics_calls_total\",service_name=~\"$service\"})  by (span_name))",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
-        "regex": "/.*operation=\"(.*)\".*/",
+        "regex": "/.*span_name=\"(.*)\".*/",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
@@ -1000,8 +1011,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Spanmetrics Demo Dashboard",
-  "uid": "W2gX2zHVk48",
-  "version": 1,
+  "title": "Spanmetrics Demo Dashboard v0.75",
+  "uid": "W2gX2zHVk484",
+  "version": 2,
   "weekStart": ""
 }

@@ -4,6 +4,7 @@
 SRC_DIR = config
 DEST_DIR = opentelemetry-demo
 
+JAEGER_SERVICE_HOST = kubic.local
 
 # Define the copy command
 CP = cp -r -f
@@ -18,11 +19,14 @@ copy_config:
 fast-run: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up  --force-recreate --no-build --remove-orphans
 
-rest: copy_config
-	docker compose -f opentelemetry-demo/docker-compose-full.yml up  --force-recreate --no-build --remove-orphans
-
 run: copy_config
-	docker compose -f opentelemetry-demo/docker-compose.yml up
+	docker compose -f opentelemetry-demo/docker-compose.yml up --no-build --remove-orphans
+
+split: apps
+	sed -i "s/^JAEGER_SERVICE_PORT=.*/JAEGER_SERVICE_PORT=$(JAEGER_SERVICE_PORT)/" $(DEST_DIR)/.env
+
+apps: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-deps otelcol cartservice loadgenerator frontend frontendproxy
 
 grafana: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  grafana
