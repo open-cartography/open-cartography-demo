@@ -18,7 +18,8 @@ datasources:
   - name: Jaeger
     uid: webstore-traces
     type: jaeger
-    url: http://jaeger:16686/jaeger/ui
+    access: direct
+    url: http://UM00604:16686/jaeger/ui
     editable: true
     isDefault: false
     jsonData:
