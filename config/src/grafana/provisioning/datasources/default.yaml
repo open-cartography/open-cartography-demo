@@ -8,8 +8,7 @@ datasources:
   - name: Prometheus
     uid: webstore-metrics
     type: prometheus
-    access: direct
-    url: http://UM00604:9090
+    url: http://prometheus:9090
     editable: true
     isDefault: true
     jsonData:
@@ -17,6 +16,6 @@ datasources:
         - datasourceUid: webstore-traces
           name: trace_id
 
-        - url: http://UM00604:8080/jaeger/ui/trace/$${__value.raw}
+        - url: http://localhost:8080/jaeger/ui/trace/$${__value.raw}
           name: trace_id
           urlDisplayLabel: View in Jaeger UI

@@ -5,7 +5,7 @@ datasources:
     type: tempo
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
     access: direct
-    url: http://UM00604:16686/jaeger/ui/api/traces
+    url: http://localhost:16686/jaeger/ui/api/traces
     jsonData:
       httpMethod: GET
       tracesToMetrics:
