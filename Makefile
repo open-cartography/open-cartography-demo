@@ -43,7 +43,7 @@ split_apps: apps
 	sed -i '' "s/^PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=.*/PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$(PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT)/" $(DEST_DIR)/.env
 
 apps: copy_config
-	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  frontendproxy
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps  frontendproxy frontend kafka cartservice ffs_postgres featureflagservice loadgenerator
 
 obs: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps frontendproxy otelcol jaeger prometheus grafana
