@@ -332,9 +332,9 @@ services:
       - OTEL_COLLECTOR_PORT
       - ENVOY_PORT
     depends_on:
-      - frontend
+#      - frontend
       - featureflagservice
-      - loadgenerator
+#      - loadgenerator
       - grafana
 
   # Load Generator
