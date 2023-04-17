@@ -36,7 +36,7 @@ service:
 #      receivers: [otlp]
 ##      processors: [spanmetrics, batch]
 #      processors: [batch]
-#      exporters: [logging, otlp]
+#      exporters: [otlp]
     metrics:
       receivers: [otlp]
       processors: [transform, batch]

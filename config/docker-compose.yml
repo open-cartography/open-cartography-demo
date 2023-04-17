@@ -332,9 +332,9 @@ services:
       - OTEL_COLLECTOR_PORT
       - ENVOY_PORT
     depends_on:
-#      - frontend
+      - frontend
       - featureflagservice
-#      - loadgenerator
+      - loadgenerator
       - grafana
 
   # Load Generator
@@ -606,7 +606,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 75M
+          memory: 100M
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
@@ -626,7 +626,7 @@ services:
         limits:
           memory: 125M
     restart: unless-stopped
-    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
+    command: [ "--feature-gates=service.connectors", "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
     volumes:
       - ./src/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
       - ./src/otelcollector/otelcol-config-extras.yml:/etc/otelcol-config-extras.yml

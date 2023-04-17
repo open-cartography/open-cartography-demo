@@ -21,13 +21,19 @@ run: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --no-build --remove-orphans
 
 apps: copy_config
-	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps  frontendproxy frontend kafka cartservice ffs_postgres featureflagservice loadgenerator
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps  frontendproxy frontend redis-cart cartservice ffs_postgres featureflagservice loadgenerator
 
 obs: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps frontend frontendproxy otelcol jaeger prometheus grafana
 
 cart: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps redis-cart cartservice
+
+ad: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps adservice
+
+checkout: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps kafka checkoutservice
 
 grafana: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps grafana
