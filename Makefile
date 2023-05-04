@@ -43,3 +43,9 @@ otelcol: copy_config
 
 prometheus: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  prometheus
+
+neo4j: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  neo4j
+
+frontendproxy: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps  frontendproxy
