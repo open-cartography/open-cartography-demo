@@ -25,4 +25,10 @@ scrape_configs:
   static_configs:
     - targets:
         - 'otelcol:8888'
+- job_name: storyteller
+  static_configs:
+    - targets:
+        - 'storyteller:8082'
+  scrape_interval: 1s
+  
 

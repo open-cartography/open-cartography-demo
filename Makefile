@@ -47,5 +47,8 @@ prometheus: copy_config
 neo4j: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate  neo4j
 
+storyteller: copy_config
+	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate storyteller
+
 frontendproxy: copy_config
 	docker compose -f opentelemetry-demo/docker-compose.yml up --force-recreate --no-build  --no-deps  frontendproxy
